@@ -80,7 +80,7 @@ var commandFlags = map[string][]string{
 		site, city, countryCodes, sync, maxWaitMinutes, InsecureTls, CreateRepo,
 	},
 	ReleaseBundleV1Delete: {
-		distUrl, user, password, accessToken, serverId, rbDryRun, DistRules,
+		distUrl, user, password, accessToken, serverId, rbDryRun, DistRules, quiet,
 		site, city, countryCodes, sync, maxWaitMinutes, InsecureTls, deleteFromDist, deleteQuiet,
 	},
 }
