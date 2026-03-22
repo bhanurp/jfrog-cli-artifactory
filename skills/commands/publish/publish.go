@@ -21,6 +21,8 @@ import (
 	"github.com/jfrog/jfrog-client-go/utils/log"
 )
 
+const evidenceDocsURL = "https://jfrog.com/help/r/jfrog-artifactory-documentation/evidence-management"
+
 var zipExcludes = map[string]bool{
 	".git":         true,
 	"__pycache__":  true,
@@ -419,6 +421,12 @@ func (pc *PublishCommand) attachEvidence(slug, version, sha256Hex string) {
 		return
 	}
 
+	if !common.IsEvidenceSupported(pc.serverDetails) {
+		log.Info("Skipping evidence upload: server is not on an Enterprise Plus subscription.")
+		log.Info("See:", evidenceDocsURL)
+		return
+	}
+
 	tmpDir, err := os.MkdirTemp("", "skill-evidence-*")
 	if err != nil {
 		log.Warn("Failed to create temp dir for evidence:", err.Error())
@@ -452,7 +460,9 @@ func (pc *PublishCommand) attachEvidence(slug, version, sha256Hex string) {
 		KeyAlias:        alias,
 	})
 	if err != nil {
-		log.Warn("Evidence creation failed (skill upload succeeded):", err.Error())
+		log.Warn("Evidence creation failed (skill upload succeeded):", err.Error(),
+			"\nEvidence upload requires an Enterprise Plus subscription.",
+			"\nSee:", evidenceDocsURL)
 		return
 	}
 
